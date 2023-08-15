@@ -40,3 +40,8 @@
   - If we run yarn build, we would be able to see that all SSR pages are now SSG pages
   - If we open a user page now, there will be no loading since all of the data is already available.
 - If a page does not exist, we can return a default 404 page as demonstrated in [`./app/users/[userId]`](./ch04-ssg-ssr-isr/app/users/[userId]/not-found.tsx). We would also have to change `getUser` function in lib to return undefined if user is not found. Now if we go to `localhost:3000/users/1000`, we would see a 404 not found page.
+- If we want something, for example a navbar, to appear on all of our pages, we can add it to `layout.tsx` in the app folder.
+- When using tailwind, globals.css has some effects applied to the body, we may want to remove them.
+- To create a client side component, add `'use client` in the file. An example of this is the `error` component in about section of the [first chapter](./ch01-02-install-pages-layouts/app/about/error.tsx)
+  - We can use a client component inside a server component as we did with the search component (client side) inside Navbar (server side) in [chapter five](./ch05-small-project/app/components/Navbar.tsx)
+- For navigation, we can use `useRouter` from `next/Navigation`. In earlier versions, it was imported from `next/Router` which was meant for the older layout of the `pages` folder. In newer versions, `next/Navigation` version is used for pages in the `app` component.
