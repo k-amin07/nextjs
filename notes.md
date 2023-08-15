@@ -45,3 +45,6 @@
 - To create a client side component, add `'use client` in the file. An example of this is the `error` component in about section of the [first chapter](./ch01-02-install-pages-layouts/app/about/error.tsx)
   - We can use a client component inside a server component as we did with the search component (client side) inside Navbar (server side) in [chapter five](./ch05-small-project/app/components/Navbar.tsx)
 - For navigation, we can use `useRouter` from `next/Navigation`. In earlier versions, it was imported from `next/Router` which was meant for the older layout of the `pages` folder. In newer versions, `next/Navigation` version is used for pages in the `app` component.
+- `@tailwindcss/typography` helps formatting markdown. Install with `yarn add @tailwindcss/typography --dev`
+- Add `react-icons` dependency to use `font-awesome` icons in the project
+- For production Image Optimization with Next.js, the optional `sharp` package is strongly recommended. Just install it with `yarn add sharp` and it will be automatically used.
