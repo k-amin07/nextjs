@@ -1,0 +1,1 @@
+Next.js notes from [Dave Gray](https://github.com/gitdagray)'s [tutorial](https://www.youtube.com/watch?v=843nec-IvW0)
