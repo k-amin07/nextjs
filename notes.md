@@ -31,7 +31,7 @@
 - On the same level as `app`, we can create a folder called `lib` which contains all of our helper functions like `getAllUsers`. 
 - If a function returns something, we add a semicolon followed by the return type to the function definition.
 - We can use `Suspense` from react to provide feedback while a promise is being resolved.
-- Running `yarn build` generates an optimized
+- Running `yarn build` generates an optimized deployment ready build
 - Next caches data by default. In `getUserPosts`, we are using a fetch query. We can pass an options object with `{cache: 'force-cache'}`. We do not need to do this because this is the default.
   - We can pass the value `no-store` to always refetch the data and never use cache.
   - The better option is to use ISR (incremental static regenration), in the options object, pass `{next: {revalidate: 60}}` so it checks for updates every 60 seconds. Refer to [getUserPosts](./ch03-fetching-data/lib/getAllUsers.tsx)
@@ -56,3 +56,52 @@
   - We cannot have `route.ts` and `page.tsx` in the same directory.
   - If our API gets data from a different source, for example from a database, we can return `res.json()`. Although this is valid, typescript types might show an error. So we wrap the `res.json()` in `NextResponse.json()` imported from `next/server`. This is demonstrated in the [hello-json api](./ch07-route-handlers/src/app/api/hello-json/route.ts)
 - Client Side Pages that include user interaction must include `'use client'`
+- To extract only certain values from our types, we can use `Partial<>` for example `const {id}:Partial<Todo> = await request.json()`.
+- We can put env variables in `.env.local` which is automatically added to .gitignore by `yarn create next-app`.
+- GET request can receive
+  - No parameter
+  - the `Request` object as the first parameter
+  - `Props` object containing a `params` object as the second parameter, which allows us to avoid string manipulation. Demonstrated in [chapter 9](./ch09-middleware/src/app/api/todos/[id]/route.ts)
+- We can add a middleware in the `src` directory by creating a `middleware.ts` file which exports a function called `middleware`.
+  - If we declare it in the `src` directory, every single request will be passed through the middleware.
+  - we can export a config object containing `matcher` key which accepts regex of routes that the middleware applies to. This can be a single path or an array. It accepts concrete paths or regex patterns.
+  - For instance, we can define `matcher:` `/about/:path` to accept `/about/a`, `about/b` etc but it wouldnt match `about/a/b`
+  - `matcher:` `/about/:path*` will match all subroutes as well.
+- Alternatively, we can add a condition within the `middleware` function like `if (request.url.includes('/api/){}` to limit the scope of the middleware or make it conditional based on different routes.
+- We can use `RateLimiter` by installing the `limiter` package. We can see that in action in [todos api in Chapter 9](./ch09-middleware/src/app/api/todos/[id]/route.ts)
+  - If we do not set `fireImmediately: true` when initializing rate limiter, it will wait until tokens are available to process the request.
+  - If we do set `fireImmediately: true`, we can add a condition to return error code 429 too many requests.
+  - The first parameter in the `NextResponse` is the response body, the second parameter contains the status code, status text and headers.
+- We can add the allowed origins to the middleware like in [middleware in chapter 9](./ch09-middleware/src/middleware.ts)
+  - If we want to block requests from places that do not include an origin at all (like postman or thunderclient), we can add a condition for that as well (see commented code in the linked file.)
+- In production builds (yarn build) we can revalidate all requests by adding `export const revalidate = 3600` in `layout.js` / `page.tsx`. We can revalidate particular fetch requests by passing `fetch('https://...', { next: { revalidate: 3600 } })`.
+  - This means that data is revalidated on server every x seconds. For example, in chapter 6, if we add a new blogpost to the [`blogposts`](./ch06-blog-website/blogposts/) directory when the server is running, when a user refreshes the page, updated data will be available to them, provided the revalidation period has passed.
+  - We can trigger manual/on-demand revalidation by adding `/app/api/revalidate/route.ts` with the following code (taken from docs)
+    ```
+    import { NextRequest, NextResponse } from 'next/server'
+    import { revalidateTag } from 'next/cache'
+    
+    // e.g a webhook to `your-website.com/api/revalidate?tag=collection&secret=<token>`
+    export async function POST(request: NextRequest) {
+      const secret = request.nextUrl.searchParams.get('secret')
+      const tag = request.nextUrl.searchParams.get('tag')
+    
+      if (secret !== process.env.MY_SECRET_TOKEN) {
+        return NextResponse.json({ message: 'Invalid secret' }, { status: 401 })
+      }
+    
+      if (!tag) {
+        return NextResponse.json({ message: 'Missing tag param' }, { status: 400 })
+      }
+    
+      revalidateTag(tag)
+    
+      return NextResponse.json({ revalidated: true, now: Date.now() })
+    }
+    ```
+  - For this code to work, we need to add a secret token in our env variables (for example by generating one through `crypto.randomBytes(256).toString('hex')`) and then send a POST request to the route with this token. Now when the client refreshes, they'll see the updated data.
+  - More can be found in [docs](https://nextjs.org/docs/app/building-your-application/data-fetching/fetching-caching-and-revalidating)
+  - We can add `cache="nostore"` in our fetch requests or set `revalidate=0` for always refetching data on refresh.
+  - Note: This is chapter 10 of the video but I have not included that in the code.
+
+
