@@ -42,6 +42,10 @@
   - If we run yarn build, we would be able to see that all SSR pages are now SSG pages
   - If we open a user page now, there will be no loading since all of the data is already available.
 - If a page does not exist, we can return a default 404 page as demonstrated in [`./app/users/[userId]`](./ch04-ssg-ssr-isr/app/users/[userId]/not-found.tsx). We would also have to change `getUser` function in lib to return undefined if user is not found. Now if we go to `localhost:3000/users/1000`, we would see a 404 not found page.
+- Link from `next/link` allows us to navigate between pages. We can add `prefetch=false` argument to it to avoid prefetching data.
+  - This can help if we are mutating data on an element which opens a new page and we want the data to be consistent.
+  - Allows us to keep things in sync between page routes.
+  - With router.refresh(), this problem should no longer appear so we may not need to use `prefetch=false`.
 - If we want something, for example a navbar, to appear on all of our pages, we can add it to `layout.tsx` in the app folder.
 - When using tailwind, globals.css has some effects applied to the body, we may want to remove them.
 - To create a client side component, add `'use client` in the file. An example of this is the `error` component in about section of the [first chapter](./ch01-02-install-pages-layouts/app/about/error.tsx)
@@ -103,5 +107,5 @@
   - More can be found in [docs](https://nextjs.org/docs/app/building-your-application/data-fetching/fetching-caching-and-revalidating)
   - We can add `cache="nostore"` in our fetch requests or set `revalidate=0` for always refetching data on refresh.
   - Note: This is chapter 10 of the video but I have not included that in the code.
-
-
+- highlight.js rehype-highlight rehype-slug rehype-autolink-headings can be used to better format markdowns using compilemdx, used in Chapter 12.
+  - highlight.js provides code snippet themes, available themes can be found in `node_modules/highlight.js/styles/`
