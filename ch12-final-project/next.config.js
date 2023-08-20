@@ -1,12 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    images: [{
-        remotePatterns: [{
-            protocol: 'https',
-            hostname: 'cervantes.to',
-            path: 'images/photo/2022/**'
-        }]
-    }]
+    // reactStrictMode: true,
+    // swcMinify: true,
+    images: {
+        // remotePatterns: [{
+        //     protocol: 'https',
+        //     hostname: 'www.cervantes.to',
+        //     pathname: 'images/photo/2022/**'
+        // }]
+        domains: ['www.cervantes.to']
+    }
 }
 
 module.exports = nextConfig

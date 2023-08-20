@@ -204,6 +204,7 @@ Pass this function as a component to `compileMDX` to properly display images. Ho
 ```
 <CustomImage src="yoursource.com" alt="alternate text" />
 ```
+In this case, the `CustomIamge` tag in mdx must contain the entire `https://raw.githubusercontent.com/...` path used in the next.config.js below
 
 We also need to define the image source(s) in `next.config.js` as follows (for example if we are using github to store images).
 
@@ -219,7 +220,14 @@ const nextConfig = {
     }]
 }
 ```
-In this case, the `CustomIamge` tag must contain the entire `https://raw.githubusercontent.com/...` path.
+**^The above code did not work for me, however, the following did**
+```
+const nextConfig = {
+    images: {
+        domains: ['www.cervantes.to']
+    }
+}
+```
 
 ### Tailwind Plugins
 Add the following plugins to `tailwind.config.ts` for markdown formatting and markdown video aspect ratio. Install from yarn first.
