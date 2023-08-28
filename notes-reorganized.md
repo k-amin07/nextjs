@@ -335,3 +335,6 @@ await BlogPostModel.create({
 })
 ```
 `generateId` function is exported from `dbConnect.ts` which returns `new mongoose.Types.ObjectId()`
+
+### Exposing env Variables to client side code
+Apparently, `NEXT_PUBLIC_` prefix is required for env variables used by client side code (for example `NEXT_PUBLIC_API_KEY`)
