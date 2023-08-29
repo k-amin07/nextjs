@@ -237,6 +237,20 @@ plugins: [
     require('@tailwindcss/aspect-ratio'),
   ],
 ```
+These plugins will format the elements that include the `prose` class. The tutorial adds it to `layout.tsx` but that messes up with the vertical timeline. Easiest way to fix is to set `main` className in `layout.tsx` to `<main className="px-4 md:px-6 mx-auto">`. In the files where actual markdown is rendered (for example `src/app/post/[id]/page.tsx`) add the prose and other relevant classes. For example, 
+
+```
+return (
+        <div className="px-4 md:px-6 mx-auto prose prose-xl prose-slate dark:prose-invert">
+            <h2 className="text-3xl mt-4 mb-0">{meta.title}</h2>
+            <p className="mt-0 text-sm">{meta.date}</p>
+            <article>{content}</article>
+            <p className="mb-10">
+                <Link href="/">Back to Home</Link>
+            </p>
+        </div>
+    )
+```
 
 ## Using Mongodb
 To use mongodb as a database, install the `mongoose` package. This is not covered in the tutorial but i figured it would be better to use an actual database than a github repo to store the markdown files.
