@@ -350,5 +350,40 @@ await BlogPostModel.create({
 ```
 `generateId` function is exported from `dbConnect.ts` which returns `new mongoose.Types.ObjectId()`
 
-### Exposing env Variables to client side code
+## Exposing env Variables to client side code
 Apparently, `NEXT_PUBLIC_` prefix is required for env variables used by client side code (for example `NEXT_PUBLIC_API_KEY`)
+
+## Sitemap and SEO
+Sitemaps are used by search engines like Google to index the website and pages.
+
+### Sitemap Generation
+
+We can use `next-sitemap` package to generate a sitemap. Install it with `yarn add next-sitemap`.
+
+Create `next-sitemap-config.js` and add the following code to it (replace domain name with the actual domain name).
+
+```
+module.exports = {
+    siteUrl: "https://www.yourdomainname.com",
+    generateRobotsTxt: true,
+    generateIndexSitemap: false,
+}
+```
+
+`generateIndexSitemap` is set to false for smaller websites. For large websites, it can be turned on to generate multiple sitemaps.
+
+In `pacakge.json`, add the following script
+
+```
+"postbuild": "next-sitemap"
+```
+
+Now, when we run yarn build, it will generate a sitemap automatically.
+
+Ensure that the generated sitemap is valid by going to this URL
+```
+https://seositecheckup.com/tools/sitemap-test
+```
+and searching for `https://www.yourdomainname.com/sitemap.xml`.
+### Enabling SEO
+Once the sitemap has been validated, go to [Google Search Console](https://search.google.com/search-console/about) and click start now. It will ask for domain verification, go to your domain name provider (squarespace in my case) and go to manage DNS records. In DNS settings, click add preset and select Google workspace verification. Paste the value copied from Google search console. Verify it in Google search console. Add the link to the sitemap It will take a day or so for it to index pages and sitemap.
